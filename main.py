@@ -82,7 +82,7 @@ def E(b):
    v+=w if p>0 else -w
  return v
 def kp(b,s):return b.index(6 if s else -6)
-N=0;LM=50000
+N=0;LM=52000
 def Z(b,s,c,a,z,d=0):
  global N
  N+=1
