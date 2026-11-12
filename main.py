@@ -2,9 +2,10 @@ import json,os,sys,urllib.request as R
 U=os.environ["MAKEFUN_ENV_URL"]
 def q(p,d={}):
  return json.load(R.urlopen(R.Request(U+p,json.dumps(d).encode(),{"content-type":"application/json"})))
-V=[0,100,325,335,500,975,20000]
+V=[0,100,325,335,500,975,2e4]
 DV=[[],[33,31,18,14,-14,-18,-31,-33],[17,15,-15,-17],[16,1,-1,-16]]
 DV+=[DV[2]+DV[3]]*2
+SQ=[chr(97+(i&7))+str((i>>4)+1) for i in range(128)]
 CB=[min(i&7,7-i&7)+min(i>>4,7-(i>>4)) if not i&0x88 else 0 for i in range(128)]
 def F(x):
  p=x.split();b=[0]*128;c=0;r=7;f=0
@@ -17,12 +18,9 @@ def F(x):
  return b,p[1]=="w",c
 def atk(b,i,s):
  o=1 if s else -1
- for d in DV[1]:
+ for d in DV[1]+DV[4]:
   j=i+d
-  if not j&0x88 and b[j]==2*o:return 1
- for d in DV[4]:
-  j=i+d
-  if not j&0x88 and b[j]==6*o:return 1
+  if not j&0x88 and b[j]*o==(2 if d in DV[1] else 6):return 1
  for d in(-1,1):
   j=i-(16 if s else -16)+d
   if not j&0x88 and b[j]==o:return 1
@@ -80,16 +78,15 @@ def E(b):
  v=0
  for i,p in enumerate(b):
   if p:
-   t=abs(p);w=V[t]+((i>>4 if p>0 else 7-(i>>4))*8 if t==1 else (CB[i]*8 if t<6 else 0))
+   t=abs(p);w=V[t]+((i>>4 if p>0 else 7-(i>>4))*8 if t==1 else (CB[i]*8 if t<6 else -CB[i]*9))
    v+=w if p>0 else -w
  return v
 def kp(b,s):return b.index(6 if s else -6)
-N=0;LM=57000
+N=0;LM=50000
 def Z(b,s,c,a,z,d=0):
  global N
  N+=1
  v=E(b)*(1 if s else -1)
- k=kp(b,s)
  if v>=z or d>3:return v
  if v>a:a=v
  for m in G(b,s,c):
@@ -121,19 +118,20 @@ def S(b,s,c,d,a,z):
  return -25000+d*atk(b,k,not s) if v==-99999 else v
 def C(m):
  f,t,p=m
- return "abcdefgh"[f&7]+str((f>>4)+1)+"abcdefgh"[t&7]+str((t>>4)+1)+("nbrq"[p-2] if p else "")
+ return SQ[f]+SQ[t]+("nbrq"[p-2]if p else"")
 def B(b,s,c,lm):
  global N
  M=[m for m in G(b,s,c) if C(m) in lm]
  if not M:return lm[0]
  bm=M[0];N=0
- for d in range(1,14):
+ for d in range(1,9):
   a=-99999;nb=None
   try:
    for m in M:
     y=H(b,m,s)
     if atk(y,kp(y,s),not s):continue
-    w=-S(y,not s,c,d-1,-99999,99999)
+    w=-S(y,not s,c,d-1,-99999,99999) if not nb else -S(y,not s,c,d-1,-a-1,-a)
+    if nb and w>a:w=-S(y,not s,c,d-1,-99999,99999)
     if w>a:a=w;nb=m
   except StopIteration:break
   if nb is None:break
