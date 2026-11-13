@@ -31,3 +31,4 @@ d}JXvR|>s`deCoKy8A=4=q`#Z6$Y(}1UEHv-Az)dJq7&O!ryn-u4Ouqa~f+PiAuRR<yUiL@RuQUR#H6p
 MXJluQ@D5qFQetw)rVzR1$12@!LEHD2PG)N#cAebCXUZO;!wI;HVZxF-rKA-Vtn
 """
 exec(lzma.decompress(base64.b85decode(B.replace("\n","")),3,None,[{"id":33}]))
+#build v3 tapered-pst killers nullmove
