@@ -14,3 +14,4 @@ engine fits the 4,096-byte cap in one file.
 **Run it locally:** `python3.13 main.py` with the kit's env server at `MAKEFUN_ENV_URL`.
 
 MIT licensed.
+**Engine:** packed with lzma and base64.b85, standard library only, main.py is 4000 bytes.
